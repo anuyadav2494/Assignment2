@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
 
 namespace Assignment2_CT_Spring2020
 {
@@ -54,7 +56,7 @@ namespace Assignment2_CT_Spring2020
 
             Console.WriteLine("Question 8");
             string[] userDict = new string[] { "rocky", "usf", "hello", "apple" };
-            string keyword = "hhllo";
+            string keyword = "hlllo";
             
         Console.WriteLine(DictSearch(userDict, keyword));
             Console.WriteLine("Question 8");
@@ -194,23 +196,36 @@ namespace Assignment2_CT_Spring2020
         {
              try
              {
-                int[] c = new int[(int)char.MaxValue];
-                // 3.
-                // Iterate over each character.
-                foreach (char t in s2)
+
+                //initializing a dictionary
+                Dictionary<char, int> freq = new Dictionary<char, int>();
+                int n = s2.Length - 1;
+                
+                for(int i =0;i<s2.Length;i++)
                 {
-                    // Increment table.
-                    c[(int)t]++;
-                }
-                // 4.
-                // Write all letters found.
-                for (int i = 0; i < (int)char.MaxValue; i++)
-                {
-                    if (c[i] > 0 && char.IsLetterOrDigit((char)i))
-                    {
-                        Console.WriteLine("Letter: {0}  Frequency: {1}", (char)i,c[i]);
+                    int count = 0;
+                    for (int j=0;j<s2.Length;j++)
+                    {//if the character matches
+                        if(s2[i]==s2[j])
+                        {//if the key is not present before
+
+                            if (freq.ContainsKey(s2[i]))
+                            continue;
+                            //increase the count(frequency) of character
+                            count++;
+                        }
                     }
+                    //if key does not exists add key and value(character and frequency)
+                    if (!freq.ContainsKey(s2[i]))
+                        freq.Add(s2[i], count);
                 }
+
+                //Sort in descending order of frequencies
+                foreach (KeyValuePair<char,int>  a in freq.OrderByDescending(key => key.Value))
+
+                   //Print the character the number of times of its frequency
+                Console.Write(String.Concat(Enumerable.Repeat(a.Key, a.Value)));
+               
                 
 
             }
@@ -245,7 +260,7 @@ public static int[] Intersect1(int[] nums1, int[] nums2)
                         j++;
                     }
                 }
-                //Console.ReadLine();
+                
             }
             
             catch
@@ -259,9 +274,18 @@ public static int[] Intersect1(int[] nums1, int[] nums2)
 
 public static int[] Intersect2(int[] nums1, int[] nums2)
 {
-    try
-    {
-     
+             try
+             {
+                
+                // Call Intersect extension method.
+                var intersect = nums1.Intersect(nums2);
+                // Write intersection to screen.
+                foreach (int value in intersect)
+                {
+                    Console.WriteLine(value);
+                }
+               // Console.ReadLine();
+
             }
     catch
     {
@@ -280,14 +304,17 @@ public static bool ContainsDuplicate(char[] arr, int k)
                 int j = 1;
                 int diff;
                 while(i<arr.Length && j<arr.Length)
-                {
+                {   //if the elements of both arrays are equal
                     if(arr[i] ==arr[j])
                     {
-                        
+                        //add the character to arraylist
                         al.Add(arr[i]);
+                        //add the indices of both the array to another arraylist
                         indices.Add(i);
                         indices.Add(j);
+                        //Calculate the difference of both the indices
                         diff = j - i;
+                        //if the diff of indices is equal to k,then return true
                         if(diff==k)
                         { 
                             return true;
@@ -333,8 +360,52 @@ public static bool DictSearch(string[] userDict, string keyword)
 {
     try
     {
-        //Write Your Code Here
-    }
+                int i = 0;
+                int j = 0;
+                int count = 0;
+                //traverse through each element in the string array
+                foreach (string a in userDict)
+
+                {
+                    //initialise k with length of element of string
+                    int k = a.Length;
+                    
+                    //while i is less than length of element
+                    while (i < k)
+                    {//if character of element of string array matches with character of keyword
+                        if (a[i] == keyword[j])
+                        {
+                            
+                            //increase the count
+                            count++;
+                            /*if the count is equal to one less than actual length of element,
+                            then we can say that by changing exactly one character the word will 
+                            match with keyword*/
+                            if (count == k - 1)
+                            {
+                           
+                                
+                                Console.WriteLine("Given word is :" + keyword);
+                                Console.WriteLine("The correct word is :" + a);
+                                return true;
+                            }
+                            
+                        }
+                        else
+                        {
+                            i++;
+                            
+                           
+                            j++;
+                            
+                        }
+                    }
+                    count = 0;
+                    i = 0;
+                    j = 0;
+                }
+                Console.ReadLine();
+     }
     catch (Exception)
     {
         throw;
